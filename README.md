@@ -7,17 +7,17 @@ To connect your VPS server, you can use your server IP, you can create a root pa
 ### For MAC OS / Linux / Windows 10 (with openssh)
 
 1. Launch the Terminal app.
-2. ```ssh-keygen -t rsa```
-3. Press ```ENTER``` to store the key in the default folder /Users/lamadev/.ssh/id_rsa).
+2. `ssh-keygen -t rsa`
+3. Press `ENTER` to store the key in the default folder /Users/wissemgrari/.ssh/id_rsa).
 
 4. Type a passphrase (characters will not appear in the terminal).
 
 5. Confirm your passphrase to finish SSH Keygen. You should get an output that looks something like this:
 
-``` Your identification has been saved in /Users/lamadev/.ssh/id_rsa.
-Your public key has been saved in /Users/lamadev/.ssh/id_rsa.pub.
+```Your identification has been saved in /Users/wissemgrari/.ssh/id_rsa.
+Your public key has been saved in /Users/wissemgrari/.ssh/id_rsa.pub.
 The key fingerprint is:
-ae:89:72:0b:85:da:5a:f4:7c:1f:c2:43:fd:c6:44:30 lamadev@mac.local
+ae:89:72:0b:85:da:5a:f4:7c:1f:c2:43:fd:c6:44:30 wissemgrari@mac.local
 The key's randomart image is:
 +--[ RSA 2048]----+
 |                 |
@@ -29,18 +29,19 @@ The key's randomart image is:
 |. + o = o +      |
 | o...o * o       |
 |.  oo.o .        |
-+-----------------+ 
++-----------------+
 ```
+
 6. Copy your public SSH Key to your clipboard using the following code:
-```pbcopy < ~/.ssh/id_rsa.pub```
+   `pbcopy < ~/.ssh/id_rsa.pub`
 
 ### For Windows
+
 1. Download PuTTY and PuTTYgen.
-2. Open up PuTTYgen and click the ```Generate```.
+2. Open up PuTTYgen and click the `Generate`.
 3. Copy your key.
 4. Enter a key passphrase and confirm.
 5. Save the private key.
-
 
 ## Connection
 
@@ -49,7 +50,7 @@ After copying the SSH Key go the to hosting service provider dashboard and paste
 ### For MAC OS / Linux
 
 ```bash
-ssh root@<server ip address> 
+ssh root@<server ip address>
 ```
 
 ### For Windows
@@ -57,7 +58,7 @@ ssh root@<server ip address>
 1. Open the PuTTY app.
 2. Enter your IP address.
 3. Open the following section:
-Connection - SSH - Auth
+   Connection - SSH - Auth
 4. Browse the folders and choose your private key.
 
 ## First Configuration
@@ -77,11 +78,13 @@ apt remove apache2
 ```
 
 to delete related dependencies:
+
 ```
 apt autoremove
 ```
 
 ### Cleaning and updating server
+
 ```
 apt clean all && sudo apt update && sudo apt dist-upgrade
 ```
@@ -123,9 +126,11 @@ ufw allow "Nginx Full"
 ```
 
 #### First configuration
+
 ```
  nano /etc/nginx/sites-available/netflix
 ```
+
 ```
 server {
   listen 80;
@@ -150,6 +155,7 @@ ln -s /etc/nginx/sites-available/netflix /etc/nginx/sites-enabled/netflix
 ```
 
 ##### Write your fist message
+
 ```
 nano /var/www/netflix/index.html
 
@@ -170,6 +176,7 @@ apt install git
 ```
 mkdir netflix
 ```
+
 ```
 cd netflix
 ```
@@ -179,9 +186,11 @@ git clone <your repository>
 ```
 
 ## Nginx Configuration for new apps
+
 ```
 nano /etc/nginx/sites-available/netflix
 ```
+
 ```
 location /api {
         proxy_pass http://45.90.108.107:8800;
@@ -206,28 +215,35 @@ apt install npm
 ```
 cd api
 ```
+
 ```
 npm install
 ```
+
 ```
 nano .env
 ```
+
 ##### Copy and paste your env file
+
 ```
 node index.js
 ```
 
-#### But if you close your ssh session here. It's gonna kill this process. To prevent this we are going to need a package which is called ```pm2```
+#### But if you close your ssh session here. It's gonna kill this process. To prevent this we are going to need a package which is called `pm2`
+
 ```
 npm i -g pm2
 ```
+
 Let's create a new pm2 instance
 
 ```
-pm2 start --name api index.js   
+pm2 start --name api index.js
 ```
+
 ```
-pm2 startup ubuntu 
+pm2 startup ubuntu
 ```
 
 ## React App Deployment
@@ -239,11 +255,13 @@ cd ../client
 ```
 nano .env
 ```
+
 Paste your env file.
 
 ```
 npm i
 ```
+
 Let's create the build file
 
 ```
@@ -255,6 +273,7 @@ Right now, we should move this build file into the main web file
 ```
 rm -rf /var/www/netflix/*
 ```
+
 ```
 mkdir /var/www/netflix/client
 ```
@@ -264,6 +283,7 @@ cp -r build/* /var/www/netflix/client
 ```
 
 Let's make some server configuration
+
 ```
  location / {
         root /var/www/netflix/client/;
@@ -277,18 +297,21 @@ Let's make some server configuration
   }
 
 ```
+
 ### Adding Domain
+
 1 - Make sure that you created your A records on your domain provider website.
 
 2 - Change your pathname from Router
 
-3 - Change your env files and add the new API address 
+3 - Change your env files and add the new API address
 
 4 - Add the following server config
+
 ```
 server {
  listen 80;
- server_name safakkocaoglu.com www.safakkocaoglu.com;
+ server_name netflix.com www.netflix.com;
 
 location / {
  root /var/www/netflix/client;
@@ -304,7 +327,7 @@ location / {
 
 server {
   listen 80;
-  server_name api.safakkocaoglu.com;
+  server_name api.netflix.com;
   location / {
     proxy_pass http://45.90.108.107:8800;
     proxy_http_version 1.1;
@@ -317,7 +340,7 @@ server {
 
 server {
   listen 80;
-  server_name admin.safakkocaoglu.com;
+  server_name admin.netflix.com;
   location / {
     root /var/www/netflix/admin;
     index  index.html index.htm;
@@ -332,11 +355,13 @@ server {
 ```
 
 ## SSL Certification
+
 ```
 apt install certbot python3-certbot-nginx
 ```
 
 Make sure that Nginx Full rule is available
+
 ```
 ufw status
 ```
@@ -346,7 +371,7 @@ certbot --nginx -d example.com -d www.example.com
 ```
 
 Let’s Encrypt’s certificates are only valid for ninety days. To set a timer to validate automatically:
+
 ```
 systemctl status certbot.timer
 ```
-
